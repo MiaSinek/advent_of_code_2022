@@ -34,8 +34,8 @@ class RucksackReorganizer
 
     return common_items.first if common_items.length == 1
 
-    raise "Found more than one common item in this rucksacks compartments: #{rucksack}"
-    raise "Found no common item in this rucksacks compartments: #{rucksack}"
+    raise "Found more than one common item in this rucksacks compartments: #{rucksack}" if common_items.length > 1
+    raise "Found no common item in this rucksacks compartments: #{rucksack}" if common_items.length == 0
   end
 
   def priority_of(common_item)
