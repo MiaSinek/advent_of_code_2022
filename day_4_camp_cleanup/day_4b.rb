@@ -22,7 +22,6 @@ private
     overlap = first_elfs_section(elf_pair) & second_elfs_section(elf_pair)
 
     return true if overlap.any?
-    false
   end
 
   def section_to_be_cleaned(elf_pair, elf_index)
