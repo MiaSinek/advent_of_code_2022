@@ -6,45 +6,40 @@ class CathodeRayTube
     @raw_intsructions = raw_intsructions
   end
 
+  attr_reader :raw_intsructions
+
   def signal_strength
     x_register = 1
-    cycle = 0
+    cycle = 1
     signal_strength = 0
 
     raw_intsructions.map do |raw_intsruction|
       action, value = raw_intsruction.split(" ").map(&:chomp)
 
+      #if noop or addx:
+      # check signal strength
       if cycle % 40 == 20
         signal_strength += x_register * cycle
-        p "signal_strength: #{signal_strength}, x_register: #{x_register}, cycle: #{cycle}"
       end
 
-      p "x_register: #{x_register} jsut pumping up the cycle, no effect on x_register, cycle: #{cycle}"
-      cycle += 1
+      cycle += 1 # increment cycle
 
-      case action
-      when "noop"
-        # no effect on x_register, takes 1 cycle to complete
-      when "addx"
-        p "addx: #{value}, cycle: #{cycle} , x_register: #{x_register}"
-        # adds value to x_register, takes 2 cycle to complete
+      # if addx:
+      if action == "addx"
+        # check signal strength
         if cycle % 40 == 20
           signal_strength += x_register * cycle
-          p "signal_strength: #{signal_strength}, x_register: #{x_register}, cycle: #{cycle}"
         end
+        # add to x and increment cycle
         x_register += value.to_i
         cycle += 1
       end
     end
     signal_strength
   end
-
-private
-
-  attr_reader :raw_intsructions
 end
 
-class TestCampCleanup < Minitest::Test
+class TestCathodeRayTube < Minitest::Test
   def test_signal_strength
     raw_instructions = File.readlines("test_input.txt").map(&:chomp)
 
@@ -52,4 +47,4 @@ class TestCampCleanup < Minitest::Test
   end
 end
 
-#puts CampCleanup.new(File.readlines("input.txt").map(&:chomp)).number_of_fully_overlapping_pairs
+puts CathodeRayTube.new(File.readlines("input.txt").map(&:chomp)).signal_strength
